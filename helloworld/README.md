@@ -3,8 +3,7 @@
 use docker as provider.
 
 ```shell
-GOOS=linux GOARCH=amd64 go build
-docker-compose up -d
+make deploy
 ```
 
 open `localhost:8080` in browser, you can see web UI.
