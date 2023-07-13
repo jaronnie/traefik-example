@@ -1,0 +1,18 @@
+upstream traefik {
+    keepalive 2000;
+    server gateway weight=1;
+    server gateway weight=1;
+}
+
+server {
+    listen       80;
+    server_name  localhost;
+
+    location / {
+        root /usr/share/nginx/html;
+    }
+
+    location ~* ^/gateway/(.*)$ {
+        proxy_pass http://traefik/apps.$1$is_args$args;
+    }
+}

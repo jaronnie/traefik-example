@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  console:
+    build: ./console
+    ports:
+      - "80:80"
+  gateway:
+    # The official v2 Traefik docker image
+    image: traefik:latest
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker --log.level=DEBUG
+    ports:
+      # The HTTP port
+      - "81:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    labels: 
+      - "traefik.http.middlewares.prefix-stripper.stripprefixregex.regex=/apps.*?/"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+  app1:
+    build: ./apps/app1
+    labels:
+      - "traefik.http.routers.app1.rule=PathPrefix(`/apps.app1`)"
+      - "traefik.http.routers.app1.middlewares=prefix-stripper"
+  app2:
+    build: ./apps/app2
+    labels:
+      - "traefik.http.routers.app2.rule=PathPrefix(`/apps.app2`)"
+      - "traefik.http.routers.app2.middlewares=prefix-stripper"
+  app3:
+    build: ./apps/app3
+    labels:
+      - "traefik.http.routers.app3.rule=PathPrefix(`/apps.app3`)"
+      - "traefik.http.routers.app3.middlewares=prefix-stripper"
