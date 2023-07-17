@@ -5,6 +5,10 @@
 
 	root * /usr/share/caddy/html
 
+	handle / {
+		file_server
+	}
+
 	@gateway {
 		path_regexp gateway ^/gateway/(.*)$
 	}
