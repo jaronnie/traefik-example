@@ -1,18 +1,20 @@
 version: '3'
 
 services:
-  console:
-    build: ./console
+  console-nginx:
+    build: ./console-nginx
     ports:
       - "80:80"
+  console-caddy:
+    build: ./console-caddy
+    ports:
+      - "81:80" 
   gateway:
     # The official v2 Traefik docker image
     image: traefik:latest
     # Enables the web UI and tells Traefik to listen to docker
     command: --api.insecure=true --providers.docker --log.level=DEBUG
     ports:
-      # The HTTP port
-      - "81:80"
       # The Web UI (enabled by --api.insecure=true)
       - "8080:8080"
     labels: 

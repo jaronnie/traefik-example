@@ -1,0 +1,17 @@
+:80 {
+	log {
+		level debug
+	}
+
+	root * /usr/share/caddy/html
+
+	@gateway {
+		path_regexp gateway ^/gateway/(.*)$
+	}
+	rewrite @gateway /apps.{re.gateway.1}
+	reverse_proxy gateway:80
+	# 负载均衡
+	# reverse_proxy {
+	# 	to gateway:80
+	# }
+}
